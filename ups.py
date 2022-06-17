@@ -12,13 +12,15 @@ def get_info():
         new_ups_info[key.strip()] = item.strip()
     return new_ups_info
 
+# Create socket that will listen for requets
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serversocket.bind(('192.168.1.78', 8089)) 
-serversocket.listen(5) # become a server socket, maximum 5 connections 
+serversocket.listen(5) # maximum 5 connections 
 
 while True:
     connection, address = serversocket.accept()
     buf = connection.recv(64) 
+    # If client sent a "get", respond with battery charge
     if len(buf) > 0 and buf == "get".encode():
         print("Received charge request")
         connection.send(get_info()["BCHARGE"].encode())
