@@ -12,9 +12,13 @@ def get_info():
         new_ups_info[key.strip()] = item.strip()
     return new_ups_info
 
-ups_info = get_info()
-bat_perc = float(ups_info["BCHARGE"].replace(" Percent",""))
+serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+serversocket.bind(('192.168.1.78', 8089)) 
+serversocket.listen(5) # become a server socket, maximum 5 connections 
 
-clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-clientsocket.connect(('localhost', 8089))
-clientsocket.send(str(bat_perc).encode())
+while True:
+    connection, address = serversocket.accept()
+    buf = connection.recv(64) 
+    if len(buf) > 0 and buf == "get".encode():
+        print("Received charge request")
+        connection.send(get_info()["BCHARGE"].encode())
