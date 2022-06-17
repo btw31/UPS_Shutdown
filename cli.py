@@ -10,5 +10,6 @@ charge = 0
 if len(buf) > 0:
     charge = float(buf.decode().strip(" Percent"))
 
-if charge >= 100:
-    os.system("shutdown now")
+print(charge)
+#if charge >= 100:
+#    os.system("shutdown now")
